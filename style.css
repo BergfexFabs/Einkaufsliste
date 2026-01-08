@@ -35,7 +35,7 @@ button:hover {
 }
 
 /* -----------------------
-   Input
+   Inputfelder
 ------------------------*/
 input {
     width: 70%;
@@ -75,6 +75,33 @@ li:hover {
 }
 
 /* -----------------------
+   Kostenvergleich Fabian & Anna
+------------------------*/
+.person-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.person-inputs div {
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+}
+
+#result {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    text-align: left;
+}
+
+#result p {
+    margin: 5px 0;
+}
+
+/* -----------------------
    Mobile / kleinere Bildschirme
 ------------------------*/
 @media (max-width: 480px) {
@@ -90,5 +117,14 @@ li:hover {
     button {
         width: 90%;
         margin: 5px 0;
+    }
+
+    .person-inputs {
+        flex-direction: column;
+    }
+
+    .person-inputs div {
+        width: 100%;
+        margin-bottom: 10px;
     }
 }
