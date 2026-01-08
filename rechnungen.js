@@ -19,6 +19,21 @@ let fabianEntries = [];
 let annaEntries = [];
 
 // ---------------------------
+// LocalStorage laden
+// ---------------------------
+function loadEntries() {
+    fabianEntries = JSON.parse(localStorage.getItem("fabianEntries")) || [];
+    annaEntries = JSON.parse(localStorage.getItem("annaEntries")) || [];
+
+    entriesList.innerHTML = "";
+
+    fabianEntries.forEach(value => addListItem("Fabian", value));
+    annaEntries.forEach(value => addListItem("Anna", value));
+
+    calculateTotals();
+}
+
+// ---------------------------
 // Einträge hinzufügen
 // ---------------------------
 fabianAdd.addEventListener("click", () => addEntry("fabian"));
@@ -39,6 +54,8 @@ function addEntry(person) {
         addListItem("Anna", value);
         annaInput.value = "";
     }
+    saveEntries();
+    calculateTotals();
 }
 
 // ---------------------------
@@ -59,11 +76,9 @@ function calculateTotals() {
     const fabianTotal = fabianEntries.reduce((a, b) => a + b, 0);
     const annaTotal = annaEntries.reduce((a, b) => a + b, 0);
 
-    // Anzeige der Gesamtsummen
     fabianResult.textContent = `Fabian: ${fabianTotal.toFixed(2)} €`;
     annaResult.textContent = `Anna: ${annaTotal.toFixed(2)} €`;
 
-    // Fair-Share Berechnung
     const total = fabianTotal + annaTotal;
     //const fairShare = total / 2;
 
@@ -88,4 +103,18 @@ clearAllBtn.addEventListener("click", () => {
     fabianResult.textContent = "Fabian: 0 €";
     annaResult.textContent = "Anna: 0 €";
     balance.textContent = "";
+    saveEntries();
 });
+
+// ---------------------------
+// LocalStorage speichern
+// ---------------------------
+function saveEntries() {
+    localStorage.setItem("fabianEntries", JSON.stringify(fabianEntries));
+    localStorage.setItem("annaEntries", JSON.stringify(annaEntries));
+}
+
+// ---------------------------
+// Beim Laden der Seite
+// ---------------------------
+loadEntries();
