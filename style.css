@@ -33,8 +33,38 @@ h1, h2 {
     margin-left: 5px;
     transition: background-color 0.2s;
 }
-
 #addBtn:hover {
+    background-color: #2980b9;
+}
+
+#fabianAdd {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 5px;
+    transition: background-color 0.2s;
+}
+#fabianAdd:hover {
+    background-color: #2980b9;
+}
+
+#annaAdd {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 5px;
+    transition: background-color 0.2s;
+}
+
+#annaAdd:hover {
     background-color: #2980b9;
 }
 
