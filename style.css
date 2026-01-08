@@ -1,25 +1,94 @@
+/* -----------------------
+   Allgemeine Styles
+------------------------*/
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
     max-width: 400px;
     margin: auto;
+    text-align: center;
+    background-color: #f8f8f8;
 }
 
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* -----------------------
+   Buttons
+------------------------*/
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* -----------------------
+   Input
+------------------------*/
 input {
     width: 70%;
     padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
-button {
-    padding: 10px;
+/* -----------------------
+   Einkaufsliste
+------------------------*/
+ul {
+    list-style-type: none;
+    padding: 0;
 }
 
 li {
-    margin-top: 10px;
+    background-color: white;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
+li:hover {
+    background-color: #e0e0e0;
+}
+
+/* Abgehakte Items */
 .done {
     text-decoration: line-through;
     color: gray;
+    opacity: 0.7;
+}
+
+/* -----------------------
+   Mobile / kleinere Bildschirme
+------------------------*/
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    button {
+        width: 90%;
+        margin: 5px 0;
+    }
 }
