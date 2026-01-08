@@ -65,9 +65,9 @@ function calculateTotals() {
 
     // Fair-Share Berechnung
     const total = fabianTotal + annaTotal;
-    const fairShare = total / 2;
+    //const fairShare = total / 2;
 
-    const diff = (fabianTotal - fairShare).toFixed(2);
+    const diff = (fabianTotal - annaTotal).toFixed(2);
 
     if (diff > 0) {
         balance.textContent = `Anna schuldet Fabian: ${diff} €`;
