@@ -18,3 +18,8 @@ li {
     margin-top: 10px;
     cursor: pointer;
 }
+
+.done {
+    text-decoration: line-through;
+    color: gray;
+}
