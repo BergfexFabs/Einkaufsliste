@@ -192,6 +192,10 @@ ul#list li:hover {
 #cancelDelete:hover {
     background-color: #95a5a6;
 }
+/*neuer absatz*/
+button {
+    margin-top: 10px;
+}
 
 /* Responsive für Handy */
 @media (max-width: 500px) {
