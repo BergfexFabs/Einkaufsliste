@@ -128,3 +128,61 @@ li:hover {
         margin-bottom: 10px;
     }
 }
+
+/* Popup Hintergrund */
+.popup {
+    display: none; /* standardm‰ﬂig versteckt */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Popup Inhalt */
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 300px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Buttons im Popup */
+.popup-buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.popup-buttons button {
+    width: 100px;
+    padding: 8px 0;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#confirmDelete {
+    background-color: #e74c3c;
+    color: white;
+}
+
+#confirmDelete:hover {
+    background-color: #c0392b;
+}
+
+#cancelDelete {
+    background-color: #bdc3c7;
+    color: black;
+}
+
+#cancelDelete:hover {
+    background-color: #95a5a6;
+}

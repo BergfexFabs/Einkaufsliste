@@ -13,6 +13,13 @@ const annaResult = document.getElementById("annaResult");
 const balance = document.getElementById("balance");
 
 // ---------------------------
+// Popup Elemente
+// ---------------------------
+const deletePopup = document.getElementById("deletePopup");
+const confirmDelete = document.getElementById("confirmDelete");
+const cancelDelete = document.getElementById("cancelDelete");
+
+// ---------------------------
 // Arrays für Beträge
 // ---------------------------
 let fabianEntries = [];
@@ -94,12 +101,14 @@ function calculateTotals() {
 }
 
 // ---------------------------
-// Alle Einträge löschen
+// Alle Einträge löschen mit Popup
 // ---------------------------
 clearAllBtn.addEventListener("click", () => {
-    const confirmed = confirm("Sind Sie sicher, dass Sie alle Einträge löschen möchten?");
-    if (!confirmed) return; // Abbrechen, wenn der Benutzer Nein klickt
+    deletePopup.style.display = "flex"; // Popup anzeigen
+});
 
+// Bestätigen Löschen
+confirmDelete.addEventListener("click", () => {
     fabianEntries = [];
     annaEntries = [];
     entriesList.innerHTML = "";
@@ -107,7 +116,14 @@ clearAllBtn.addEventListener("click", () => {
     annaResult.textContent = "Anna: 0 €";
     balance.textContent = "";
     saveEntries();
+    deletePopup.style.display = "none"; // Popup schließen
 });
+
+// Abbrechen
+cancelDelete.addEventListener("click", () => {
+    deletePopup.style.display = "none"; // Popup schließen
+});
+
 // ---------------------------
 // LocalStorage speichern
 // ---------------------------
