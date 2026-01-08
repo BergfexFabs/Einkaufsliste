@@ -97,6 +97,9 @@ function calculateTotals() {
 // Alle Einträge löschen
 // ---------------------------
 clearAllBtn.addEventListener("click", () => {
+    const confirmed = confirm("Sind Sie sicher, dass Sie alle Einträge löschen möchten?");
+    if (!confirmed) return; // Abbrechen, wenn der Benutzer Nein klickt
+
     fabianEntries = [];
     annaEntries = [];
     entriesList.innerHTML = "";
@@ -105,7 +108,6 @@ clearAllBtn.addEventListener("click", () => {
     balance.textContent = "";
     saveEntries();
 });
-
 // ---------------------------
 // LocalStorage speichern
 // ---------------------------
