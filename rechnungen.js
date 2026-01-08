@@ -61,8 +61,8 @@ function addEntry(person) {
         addListItem("Anna", value);
         annaInput.value = "";
     }
-    saveEntries();
-    calculateTotals();
+    saveEntries();       // LocalStorage aktualisieren
+    calculateTotals();   // Berechnung aktualisieren
 }
 
 // ---------------------------
@@ -87,9 +87,9 @@ function calculateTotals() {
     annaResult.textContent = `Anna: ${annaTotal.toFixed(2)} €`;
 
     const total = fabianTotal + annaTotal;
-    //const fairShare = total / 2;
+    const fairShare = total / 2;
 
-    const diff = (fabianTotal - annaTotal).toFixed(2);
+    const diff = (fabianTotal - fairShare).toFixed(2);
 
     if (diff > 0) {
         balance.textContent = `Anna schuldet Fabian: ${diff} €`;
@@ -100,12 +100,14 @@ function calculateTotals() {
     }
 }
 
-// Event für "Alle Einträge löschen"
+// ---------------------------
+// Alle Einträge löschen mit Popup
+// ---------------------------
 clearAllBtn.addEventListener("click", () => {
     deletePopup.style.display = "flex"; // Popup NUR beim Klick anzeigen
 });
 
-// Wenn "Ja" geklickt
+// Bestätigen Löschen
 confirmDelete.addEventListener("click", () => {
     fabianEntries = [];
     annaEntries = [];
@@ -117,11 +119,10 @@ confirmDelete.addEventListener("click", () => {
     deletePopup.style.display = "none"; // Popup schließen
 });
 
-// Wenn "Nein" geklickt
+// Abbrechen
 cancelDelete.addEventListener("click", () => {
     deletePopup.style.display = "none"; // Popup schließen
 });
-
 
 // ---------------------------
 // LocalStorage speichern
