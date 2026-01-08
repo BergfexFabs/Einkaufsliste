@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rechnungen</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Optional für Web-App-Modus auf Handy -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="icon.png">
 </head>
 <body>
     <h1>💰 Kostenvergleich</h1>
@@ -25,7 +30,6 @@
     <h2>Einträge</h2>
     <ul id="entriesList"></ul>
 
-    <!--<button id="calculateBtn">Berechnen</button>-->
     <button id="clearAllBtn">Alle Einträge löschen</button>
 
     <div id="result">
@@ -37,18 +41,17 @@
 
     <button onclick="location.href='index.html'">Zurück zur Startseite</button>
 
-    <script src="rechnungen.js"></script>
-
-   <!-- Popup zum Löschen -->
-<div id="deletePopup" class="popup">
-    <div class="popup-content">
-        <p>Sind Sie sicher, dass Sie alle Einträge löschen möchten?</p>
-        <div class="popup-buttons">
-            <button id="confirmDelete">Ja</button>
-            <button id="cancelDelete">Nein</button>
+    <!-- Popup zum Löschen -->
+    <div id="deletePopup" class="popup">
+        <div class="popup-content">
+            <p>Sind Sie sicher, dass Sie alle Einträge löschen möchten?</p>
+            <div class="popup-buttons">
+                <button id="confirmDelete">Ja</button>
+                <button id="cancelDelete">Nein</button>
+            </div>
         </div>
     </div>
-</div>
 
+    <script src="rechnungen.js"></script>
 </body>
 </html>

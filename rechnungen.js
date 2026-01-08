@@ -1,33 +1,24 @@
-// ---------------------------
 // Elemente
-// ---------------------------
 const fabianInput = document.getElementById("fabianInput");
 const annaInput = document.getElementById("annaInput");
 const fabianAdd = document.getElementById("fabianAdd");
 const annaAdd = document.getElementById("annaAdd");
 const entriesList = document.getElementById("entriesList");
-const calculateBtn = document.getElementById("calculateBtn");
 const clearAllBtn = document.getElementById("clearAllBtn");
 const fabianResult = document.getElementById("fabianResult");
 const annaResult = document.getElementById("annaResult");
 const balance = document.getElementById("balance");
 
-// ---------------------------
 // Popup Elemente
-// ---------------------------
 const deletePopup = document.getElementById("deletePopup");
 const confirmDelete = document.getElementById("confirmDelete");
 const cancelDelete = document.getElementById("cancelDelete");
 
-// ---------------------------
 // Arrays für Beträge
-// ---------------------------
 let fabianEntries = [];
 let annaEntries = [];
 
-// ---------------------------
 // LocalStorage laden
-// ---------------------------
 function loadEntries() {
     fabianEntries = JSON.parse(localStorage.getItem("fabianEntries")) || [];
     annaEntries = JSON.parse(localStorage.getItem("annaEntries")) || [];
@@ -40,9 +31,7 @@ function loadEntries() {
     calculateTotals();
 }
 
-// ---------------------------
 // Einträge hinzufügen
-// ---------------------------
 fabianAdd.addEventListener("click", () => addEntry("fabian"));
 annaAdd.addEventListener("click", () => addEntry("anna"));
 
@@ -61,24 +50,18 @@ function addEntry(person) {
         addListItem("Anna", value);
         annaInput.value = "";
     }
-    saveEntries();       // LocalStorage aktualisieren
-    calculateTotals();   // Berechnung aktualisieren
+    saveEntries();
+    calculateTotals();
 }
 
-// ---------------------------
-// Eintrag in die HTML-Liste
-// ---------------------------
+// Eintrag in Liste
 function addListItem(name, value) {
     const li = document.createElement("li");
     li.textContent = `${name}: ${value.toFixed(2)} €`;
     entriesList.appendChild(li);
 }
 
-// ---------------------------
-// Berechnung der Gesamtsummen & Schuld
-// ---------------------------
-calculateBtn.addEventListener("click", calculateTotals);
-
+// Berechnung
 function calculateTotals() {
     const fabianTotal = fabianEntries.reduce((a, b) => a + b, 0);
     const annaTotal = annaEntries.reduce((a, b) => a + b, 0);
@@ -87,9 +70,9 @@ function calculateTotals() {
     annaResult.textContent = `Anna: ${annaTotal.toFixed(2)} €`;
 
     const total = fabianTotal + annaTotal;
-    const fairShare = total / 2;
+    //const fairShare = total / 2;
 
-    const diff = (fabianTotal - fairShare).toFixed(2);
+    const diff = (fabianTotal - annaTotal).toFixed(2);
 
     if (diff > 0) {
         balance.textContent = `Anna schuldet Fabian: ${diff} €`;
@@ -100,11 +83,9 @@ function calculateTotals() {
     }
 }
 
-// ---------------------------
 // Alle Einträge löschen mit Popup
-// ---------------------------
 clearAllBtn.addEventListener("click", () => {
-    deletePopup.style.display = "flex"; // Popup NUR beim Klick anzeigen
+    deletePopup.style.display = "flex"; // Popup anzeigen
 });
 
 // Bestätigen Löschen
@@ -116,23 +97,19 @@ confirmDelete.addEventListener("click", () => {
     annaResult.textContent = "Anna: 0 €";
     balance.textContent = "";
     saveEntries();
-    deletePopup.style.display = "none"; // Popup schließen
+    deletePopup.style.display = "none";
 });
 
 // Abbrechen
 cancelDelete.addEventListener("click", () => {
-    deletePopup.style.display = "none"; // Popup schließen
+    deletePopup.style.display = "none";
 });
 
-// ---------------------------
 // LocalStorage speichern
-// ---------------------------
 function saveEntries() {
     localStorage.setItem("fabianEntries", JSON.stringify(fabianEntries));
     localStorage.setItem("annaEntries", JSON.stringify(annaEntries));
 }
 
-// ---------------------------
 // Beim Laden der Seite
-// ---------------------------
 loadEntries();
