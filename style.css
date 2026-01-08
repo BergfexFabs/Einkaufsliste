@@ -142,6 +142,19 @@ li:hover {
     align-items: center;
 }
 
+/* Popup Hintergrund */
+.popup {
+    display: none; /* versteckt standardm‰ﬂig */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
 /* Popup Inhalt */
 .popup-content {
     background-color: #fff;
@@ -186,3 +199,4 @@ li:hover {
 #cancelDelete:hover {
     background-color: #95a5a6;
 }
+

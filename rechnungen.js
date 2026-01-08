@@ -100,14 +100,12 @@ function calculateTotals() {
     }
 }
 
-// ---------------------------
-// Alle Einträge löschen mit Popup
-// ---------------------------
+// Event für "Alle Einträge löschen"
 clearAllBtn.addEventListener("click", () => {
-    deletePopup.style.display = "flex"; // Popup anzeigen
+    deletePopup.style.display = "flex"; // Popup NUR beim Klick anzeigen
 });
 
-// Bestätigen Löschen
+// Wenn "Ja" geklickt
 confirmDelete.addEventListener("click", () => {
     fabianEntries = [];
     annaEntries = [];
@@ -119,10 +117,11 @@ confirmDelete.addEventListener("click", () => {
     deletePopup.style.display = "none"; // Popup schließen
 });
 
-// Abbrechen
+// Wenn "Nein" geklickt
 cancelDelete.addEventListener("click", () => {
     deletePopup.style.display = "none"; // Popup schließen
 });
+
 
 // ---------------------------
 // LocalStorage speichern
