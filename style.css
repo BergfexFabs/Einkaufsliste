@@ -205,6 +205,18 @@ ul#list li:hover {
         margin-left: 0;
         margin-bottom: 10px;
     }
+    
+    #fabianAdd {
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+    
+    #annaAdd {
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
 
     #clearDone {
         font-size: 18px;
