@@ -70,11 +70,11 @@
 
     await addDoc(collection(db, "einkaufsliste"), {
       name: input.value.trim(),
-      preis: parseFloat(preisInput.value) || 0
+      //preis: parseFloat(preisInput.value) || 0
     });
 
     input.value = "";
-    preisInput.value = "";
+   // preisInput.value = "";
   });
 
   // Abgehakte löschen
