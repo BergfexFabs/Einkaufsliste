@@ -1,23 +1,101 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Einkaufsliste</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Einkaufsliste</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Einkaufsliste</h1>
+<h1>Einkaufsliste 🛒</h1>
 
-<input id="itemInput" type="text" placeholder="Artikel eingeben">
-<button id="addBtn">Hinzufügen</button>
+<div>
+  <input id="itemInput" type="text" placeholder="Artikel eingeben">
+  <input id="preisInput" type="number" step="0.01" placeholder="Preis (€)">
+  <button id="addBtn">Hinzufügen</button>
+</div>
 
 <ul id="list"></ul>
-<button id="clearDone">Abgehakte löschen</button>
 
+<button id="clearDone">Abgehakte löschen</button>
+<br><br>
 <button onclick="location.href='index.html'">Zurück zur Startseite</button>
 
-<script src="script.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // 🔑 Firebase-Konfiguration ersetzen!
+  const firebaseConfig = {
+    apiKey: "AIzaSyAqymSCM2VtfK4B4w0CV3lt7xS48D7K23s",
+    authDomain: "einkaufsliste-3a943.firebaseapp.com",
+    projectId: "einkaufsliste-3a943",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const input = document.getElementById("itemInput");
+  const preisInput = document.getElementById("preisInput");
+  const addBtn = document.getElementById("addBtn");
+  const list = document.getElementById("list");
+  const clearBtn = document.getElementById("clearDone");
+
+  // Echtzeit-Listener
+  onSnapshot(collection(db, "einkaufsliste"), (snapshot) => {
+    list.innerHTML = "";
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const li = document.createElement("li");
+
+      li.innerHTML = `
+        <input type="checkbox" class="done">
+        <span>${data.name} – ${data.preis ?? 0} €</span>
+        <button class="delBtn">❌</button>
+      `;
+
+      // ✅ Löschen einzelner Einträge
+      li.querySelector(".delBtn").addEventListener("click", async () => {
+        await deleteDoc(doc(db, "einkaufsliste", docSnap.id));
+      });
+
+      list.appendChild(li);
+    });
+  });
+
+  // Eintrag hinzufügen
+  addBtn.addEventListener("click", async () => {
+    if (input.value.trim() === "") return;
+
+    await addDoc(collection(db, "einkaufsliste"), {
+      name: input.value.trim(),
+      preis: parseFloat(preisInput.value) || 0
+    });
+
+    input.value = "";
+    preisInput.value = "";
+  });
+
+  // Abgehakte löschen
+  clearBtn.addEventListener("click", async () => {
+    const items = list.querySelectorAll("li");
+    items.forEach(async (li, i) => {
+      const checkbox = li.querySelector(".done");
+      if (checkbox.checked) {
+        const snapshot = await collection(db, "einkaufsliste");
+        // Find the corresponding doc by order (Firestore IDs)
+        const docs = await (await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"))
+          .getDocs(collection(db, "einkaufsliste"));
+
+        let docSnap = docs.docs[i];
+        if (docSnap) {
+          await deleteDoc(doc(db, "einkaufsliste", docSnap.id));
+        }
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
