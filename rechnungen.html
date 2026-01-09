@@ -45,7 +45,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 🔑 Firebase-Konfiguration ersetzen!
     const firebaseConfig = {
       apiKey: "AIzaSyAqymSCM2VtfK4B4w0CV3lt7xS48D7K23s",
       authDomain: "einkaufsliste-3a943.firebaseapp.com",
@@ -75,8 +74,10 @@
 
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
+        const betrag = Number(data.betrag); // ✅ Zahl erzwingen
+
         const li = document.createElement("li");
-        li.textContent = `${data.person}: ${data.betrag} €`;
+        li.textContent = `${data.person}: ${betrag} €`;
 
         const delBtn = document.createElement("button");
         delBtn.textContent = "❌";
@@ -87,28 +88,18 @@
         li.appendChild(delBtn);
         entriesList.appendChild(li);
 
-        if (data.person === "Fabian") fabianSum += data.betrag;
-        if (data.person === "Anna") annaSum += data.betrag;
+        if (data.person === "Fabian") fabianSum += betrag;
+        if (data.person === "Anna") annaSum += betrag;
       });
 
       // Ergebnisse anzeigen
       fabianResult.textContent = `Fabian: ${fabianSum} €`;
       annaResult.textContent = `Anna: ${annaSum} €`;
 
-      //balance.textContent = `Differenz: ${fabianSum - annaSum} €`;
-
-      // Berechnung Schulden / Balance
-      // const total = ${fabianSum} + ${annaSum};
-      // const fairShare = total / 2;
       const diff = (fabianSum - annaSum).toFixed(2);
-
-      if (diff > 0) {
-          balance.textContent = `Anna schuldet Fabian: ${diff} €`;
-      } else if (diff < 0) {
-          balance.textContent = `Fabian schuldet Anna: ${Math.abs(diff)} €`;
-      } else {
-          balance.textContent = "Beide haben gleichviel bezahlt ✅";
-      }
+      if (diff > 0) balance.textContent = `Anna schuldet Fabian: ${diff} €`;
+      else if (diff < 0) balance.textContent = `Fabian schuldet Anna: ${Math.abs(diff)} €`;
+      else balance.textContent = "Beide haben gleichviel bezahlt ✅";
     });
 
     // 🔹 Einträge hinzufügen
@@ -131,9 +122,9 @@
     // 🔹 Alle Einträge löschen
     clearAllBtn.addEventListener("click", async () => {
       const snapshot = await getDocs(collection(db, "rechnungen"));
-      snapshot.forEach(async (docSnap) => {
+      for (const docSnap of snapshot.docs) { // ✅ await korrekt in Schleife
         await deleteDoc(doc(db, "rechnungen", docSnap.id));
-      });
+      }
     });
   </script>
 </body>
