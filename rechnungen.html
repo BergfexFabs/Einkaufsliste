@@ -1,57 +1,126 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rechnungen</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rechnungen</title>
+  <link rel="stylesheet" href="style.css">
 
-    <!-- Optional für Web-App-Modus auf Handy -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="icon.png">
+  <!-- Optional für Web-App-Modus auf Handy -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="icon.png">
 </head>
 <body>
-    <h1>💰 Kostenvergleich</h1>
+  <h1>💰 Kostenvergleich</h1>
 
-    <div class="person-inputs">
-        <div>
-            <label for="fabianInput">Fabian:</label>
-            <input type="number" id="fabianInput" placeholder="Betrag in €" min="0">
-            <button id="fabianAdd">Hinzufügen</button>
-        </div>
-        <div>
-            <label for="annaInput">Anna:</label>
-            <input type="number" id="annaInput" placeholder="Betrag in €" min="0">
-            <button id="annaAdd">Hinzufügen</button>
-        </div>
+  <div class="person-inputs">
+    <div>
+      <label for="fabianInput">Fabian:</label>
+      <input type="number" id="fabianInput" placeholder="Betrag in €" min="0">
+      <button id="fabianAdd">Hinzufügen</button>
     </div>
-
-    <h2>Einträge</h2>
-    <ul id="entriesList"></ul>
-
-    <button id="clearAllBtn">Alle Einträge löschen</button>
-
-    <div id="result">
-        <h2>Gegenüberstellung</h2>
-        <p id="fabianResult">Fabian: 0 €</p>
-        <p id="annaResult">Anna: 0 €</p>
-        <p id="balance"></p>
+    <div>
+      <label for="annaInput">Anna:</label>
+      <input type="number" id="annaInput" placeholder="Betrag in €" min="0">
+      <button id="annaAdd">Hinzufügen</button>
     </div>
+  </div>
 
-    <button onclick="location.href='index.html'">Zurück zur Startseite</button>
+  <h2>Einträge</h2>
+  <ul id="entriesList"></ul>
 
-    <!-- Popup zum Löschen -->
-    <div id="deletePopup" class="popup">
-        <div class="popup-content">
-            <p>Sind Sie sicher, dass Sie alle Einträge löschen möchten?</p>
-            <div class="popup-buttons">
-                <button id="confirmDelete">Ja</button>
-                <button id="cancelDelete">Nein</button>
-            </div>
-        </div>
-    </div>
+  <button id="clearAllBtn">Alle Einträge löschen</button>
 
-    <script src="rechnungen.js"></script>
+  <div id="result">
+    <h2>Gegenüberstellung</h2>
+    <p id="fabianResult">Fabian: 0 €</p>
+    <p id="annaResult">Anna: 0 €</p>
+    <p id="balance"></p>
+  </div>
+
+  <button onclick="location.href='index.html'">Zurück zur Startseite</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // 🔑 Firebase-Konfiguration ersetzen!
+    const firebaseConfig = {
+      apiKey: "DEIN_API_KEY",
+      authDomain: "DEIN_AUTH_DOMAIN",
+      projectId: "DEIN_PROJECT_ID",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const fabianInput = document.getElementById("fabianInput");
+    const fabianAdd = document.getElementById("fabianAdd");
+    const annaInput = document.getElementById("annaInput");
+    const annaAdd = document.getElementById("annaAdd");
+    const entriesList = document.getElementById("entriesList");
+    const clearAllBtn = document.getElementById("clearAllBtn");
+
+    const fabianResult = document.getElementById("fabianResult");
+    const annaResult = document.getElementById("annaResult");
+    const balance = document.getElementById("balance");
+
+    // 🔹 Echtzeit-Listener
+    onSnapshot(collection(db, "rechnungen"), (snapshot) => {
+      entriesList.innerHTML = "";
+
+      let fabianSum = 0;
+      let annaSum = 0;
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const li = document.createElement("li");
+        li.textContent = `${data.person}: ${data.betrag} €`;
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "❌";
+        delBtn.addEventListener("click", async () => {
+          await deleteDoc(doc(db, "rechnungen", docSnap.id));
+        });
+
+        li.appendChild(delBtn);
+        entriesList.appendChild(li);
+
+        if (data.person === "Fabian") fabianSum += data.betrag;
+        if (data.person === "Anna") annaSum += data.betrag;
+      });
+
+      // Ergebnisse anzeigen
+      fabianResult.textContent = `Fabian: ${fabianSum} €`;
+      annaResult.textContent = `Anna: ${annaSum} €`;
+      balance.textContent = `Differenz: ${fabianSum - annaSum} €`;
+    });
+
+    // 🔹 Einträge hinzufügen
+    fabianAdd.addEventListener("click", async () => {
+      const val = parseFloat(fabianInput.value);
+      if (!isNaN(val) && val > 0) {
+        await addDoc(collection(db, "rechnungen"), { person: "Fabian", betrag: val });
+        fabianInput.value = "";
+      }
+    });
+
+    annaAdd.addEventListener("click", async () => {
+      const val = parseFloat(annaInput.value);
+      if (!isNaN(val) && val > 0) {
+        await addDoc(collection(db, "rechnungen"), { person: "Anna", betrag: val });
+        annaInput.value = "";
+      }
+    });
+
+    // 🔹 Alle Einträge löschen
+    clearAllBtn.addEventListener("click", async () => {
+      const snapshot = await getDocs(collection(db, "rechnungen"));
+      snapshot.forEach(async (docSnap) => {
+        await deleteDoc(doc(db, "rechnungen", docSnap.id));
+      });
+    });
+  </script>
 </body>
 </html>
