@@ -94,7 +94,21 @@
       // Ergebnisse anzeigen
       fabianResult.textContent = `Fabian: ${fabianSum} €`;
       annaResult.textContent = `Anna: ${annaSum} €`;
-      balance.textContent = `Differenz: ${fabianSum - annaSum} €`;
+
+      //balance.textContent = `Differenz: ${fabianSum - annaSum} €`;
+
+      // Berechnung Schulden / Balance
+      // const total = ${fabianSum} + ${annaSum};
+      // const fairShare = total / 2;
+      const diff = (fabianSum - annaSum).toFixed(2);
+
+      if (diff > 0) {
+          balance.textContent = `Anna schuldet Fabian: ${diff} €`;
+      } else if (diff < 0) {
+          balance.textContent = `Fabian schuldet Anna: ${Math.abs(diff)} €`;
+      } else {
+          balance.textContent = "Beide haben gleichviel bezahlt ✅";
+      }
     });
 
     // 🔹 Einträge hinzufügen
