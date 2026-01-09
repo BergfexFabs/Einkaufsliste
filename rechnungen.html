@@ -45,6 +45,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // 🔑 Firebase-Konfiguration
     const firebaseConfig = {
       apiKey: "AIzaSyAqymSCM2VtfK4B4w0CV3lt7xS48D7K23s",
       authDomain: "einkaufsliste-3a943.firebaseapp.com",
@@ -76,25 +77,32 @@
         const data = docSnap.data();
         const betrag = Number(data.betrag); // ✅ Zahl erzwingen
 
+        // Listeneintrag
         const li = document.createElement("li");
-        li.textContent = `${data.person}: ${betrag} €`;
+        li.textContent = `${data.person}: ${betrag} € `;
 
+        // ❌ Löschen-Button für jeden Eintrag
         const delBtn = document.createElement("button");
         delBtn.textContent = "❌";
         delBtn.addEventListener("click", async () => {
-          await deleteDoc(doc(db, "rechnungen", docSnap.id));
+          try {
+            await deleteDoc(doc(db, "rechnungen", docSnap.id));
+          } catch (err) {
+            console.error("Fehler beim Löschen:", err);
+          }
         });
 
         li.appendChild(delBtn);
         entriesList.appendChild(li);
 
+        // Summenberechnung
         if (data.person === "Fabian") fabianSum += betrag;
         if (data.person === "Anna") annaSum += betrag;
       });
 
       // Ergebnisse anzeigen
-      fabianResult.textContent = `Fabian: ${fabianSum} €`;
-      annaResult.textContent = `Anna: ${annaSum} €`;
+      fabianResult.textContent = `Fabian: ${fabianSum.toFixed(2)} €`;
+      annaResult.textContent = `Anna: ${annaSum.toFixed(2)} €`;
 
       const diff = (fabianSum - annaSum).toFixed(2);
       if (diff > 0) balance.textContent = `Anna schuldet Fabian: ${diff} €`;
@@ -105,25 +113,37 @@
     // 🔹 Einträge hinzufügen
     fabianAdd.addEventListener("click", async () => {
       const val = parseFloat(fabianInput.value);
-      if (!isNaN(val) && val > 0) {
+      if (isNaN(val)) return;
+
+      try {
         await addDoc(collection(db, "rechnungen"), { person: "Fabian", betrag: val });
         fabianInput.value = "";
+      } catch (err) {
+        console.error("Fehler beim Hinzufügen:", err);
       }
     });
 
     annaAdd.addEventListener("click", async () => {
       const val = parseFloat(annaInput.value);
-      if (!isNaN(val) && val > 0) {
+      if (isNaN(val)) return;
+
+      try {
         await addDoc(collection(db, "rechnungen"), { person: "Anna", betrag: val });
         annaInput.value = "";
+      } catch (err) {
+        console.error("Fehler beim Hinzufügen:", err);
       }
     });
 
     // 🔹 Alle Einträge löschen
     clearAllBtn.addEventListener("click", async () => {
-      const snapshot = await getDocs(collection(db, "rechnungen"));
-      for (const docSnap of snapshot.docs) { // ✅ await korrekt in Schleife
-        await deleteDoc(doc(db, "rechnungen", docSnap.id));
+      try {
+        const snapshot = await getDocs(collection(db, "rechnungen"));
+        for (const docSnap of snapshot.docs) {
+          await deleteDoc(doc(db, "rechnungen", docSnap.id));
+        }
+      } catch (err) {
+        console.error("Fehler beim Löschen aller Einträge:", err);
       }
     });
   </script>
