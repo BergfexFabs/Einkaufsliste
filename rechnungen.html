@@ -4,52 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rechnungen</title>
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Optional für Web-App-Modus auf Handy -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <link rel="apple-touch-icon" href="icon.png">
 </head>
 <body>
   <h1>💰 Kostenvergleich</h1>
 
-  <div class="person-inputs">
-    <div>
-      <label for="fabianInput">Fabian:</label>
-      <input type="number" id="fabianInput" placeholder="Betrag in €" min="0">
-      <button id="fabianAdd">Hinzufügen</button>
-    </div>
-    <div>
-      <label for="annaInput">Anna:</label>
-      <input type="number" id="annaInput" placeholder="Betrag in €" min="0">
-      <button id="annaAdd">Hinzufügen</button>
-    </div>
-  </div>
+  <label>Fabian: <input type="number" id="fabianInput" min="0"> <button id="fabianAdd">Hinzufügen</button></label><br>
+  <label>Anna: <input type="number" id="annaInput" min="0"> <button id="annaAdd">Hinzufügen</button></label><br>
 
   <h2>Einträge</h2>
   <ul id="entriesList"></ul>
-
   <button id="clearAllBtn">Alle Einträge löschen</button>
 
-  <div id="result">
-    <h2>Gegenüberstellung</h2>
-    <p id="fabianResult">Fabian: 0 €</p>
-    <p id="annaResult">Anna: 0 €</p>
-    <p id="balance"></p>
-  </div>
-
-  <button onclick="location.href='index.html'">Zurück zur Startseite</button>
+  <h2>Ergebnisse</h2>
+  <p id="fabianResult">Fabian: 0 €</p>
+  <p id="annaResult">Anna: 0 €</p>
+  <p id="balance"></p>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 🔑 Firebase-Konfiguration
+    // 🔑 Firebase-Konfiguration hier einfügen
     const firebaseConfig = {
-      apiKey: "AIzaSyAqymSCM2VtfK4B4w0CV3lt7xS48D7K23s",
-      authDomain: "einkaufsliste-3a943.firebaseapp.com",
-      projectId: "einkaufsliste-3a943",
+      apiKey: "DEIN_API_KEY",
+      authDomain: "DEIN_AUTH_DOMAIN",
+      projectId: "DEIN_PROJECT_ID"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -66,7 +45,7 @@
     const annaResult = document.getElementById("annaResult");
     const balance = document.getElementById("balance");
 
-    // 🔹 Echtzeit-Listener
+    // 🔹 Echtzeit-Listener für die Sammlung "rechnungen"
     onSnapshot(collection(db, "rechnungen"), (snapshot) => {
       entriesList.innerHTML = "";
 
@@ -75,13 +54,11 @@
 
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
-        const betrag = Number(data.betrag); // ✅ Zahl erzwingen
+        const betrag = Number(data.betrag);
 
-        // Listeneintrag
         const li = document.createElement("li");
-        li.textContent = `${data.person}: ${betrag} € `;
+        li.textContent = `${data.person}: ${betrag.toFixed(2)} € `;
 
-        // ❌ Löschen-Button für jeden Eintrag
         const delBtn = document.createElement("button");
         delBtn.textContent = "❌";
         delBtn.addEventListener("click", async () => {
@@ -95,12 +72,10 @@
         li.appendChild(delBtn);
         entriesList.appendChild(li);
 
-        // Summenberechnung
         if (data.person === "Fabian") fabianSum += betrag;
         if (data.person === "Anna") annaSum += betrag;
       });
 
-      // Ergebnisse anzeigen
       fabianResult.textContent = `Fabian: ${fabianSum.toFixed(2)} €`;
       annaResult.textContent = `Anna: ${annaSum.toFixed(2)} €`;
 
@@ -114,7 +89,6 @@
     fabianAdd.addEventListener("click", async () => {
       const val = parseFloat(fabianInput.value);
       if (isNaN(val)) return;
-
       try {
         await addDoc(collection(db, "rechnungen"), { person: "Fabian", betrag: val });
         fabianInput.value = "";
@@ -126,7 +100,6 @@
     annaAdd.addEventListener("click", async () => {
       const val = parseFloat(annaInput.value);
       if (isNaN(val)) return;
-
       try {
         await addDoc(collection(db, "rechnungen"), { person: "Anna", betrag: val });
         annaInput.value = "";
